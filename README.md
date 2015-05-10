@@ -12,9 +12,14 @@ Install additional software to Yun
 Connect to your Yun via SSH Terminal and install rrd
 
 an sftp Server to easy connect your yun with an sftp client.
-# opkg update
-# opkg install openssh-sftp-server
+	root@Arduino:# opkg update
+	root@Arduino:# opkg install openssh-sftp-server
 
 the rrd software 
-# opkg install rrdcgi1 rrdtool1
+	root@Arduino:# opkg install rrdcgi1 rrdtool1
 
+Arduino Sketch
+--------------
+Because of having multiple sensors, i decided to define the sensors one by one.
+
+	
