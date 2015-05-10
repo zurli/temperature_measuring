@@ -53,11 +53,11 @@ Generate the rrd Database
 creates a database that
 is updated every 5 minutes<br>
 has heartbeat of 900, means may miss 3 measures bevore coming UNKNOWN<br>
-has data sources that that can save values from 0 to unlimited
-saves 1 day in 5-minute resolution (288 * (300*1/60) / 60/24)
-saves 1 week in in 15-minute resolution (672 * (300*3/60) / 60/24)
-saves 1 month in 1-hour resolution (744 * (300*12/60) / 60/24)
-saves 1 year in 6-hour resolution (1460 * (300*72/60) / 60/24)
+has data sources that that can save values from 0 to unlimited<br>
+saves 1 day in 5-minute resolution (288 * (300*1/60) / 60/24)<br>
+saves 1 week in in 15-minute resolution (672 * (300*3/60) / 60/24)<br>
+saves 1 month in 1-hour resolution (744 * (300*12/60) / 60/24)<br>
+saves 1 year in 6-hour resolution (1460 * (300*72/60) / 60/24)<br>
 
 Reading values on yun side and generate rrd database entry
 ----------------------------------------------------------
@@ -69,3 +69,12 @@ With a simple curl command the results of each sensor can be read
 after we read all these values in variables we can update the rrd database
 
 	rrdtool update /www/sd/visu/heating.rrd N:$boiler_oben:$boiler_mitte:$boiler_unten
+
+and finally we will generate the graph wit rrdtool graph
+
+	rrdtool graph $rrddir/Speicher_Tag.gif -s "-1d" -w 600 -h 300 --x-grid "MINUTE:30:HOUR:1:MINUTE:120:0:%H" \
+	--title="Speicher 24h" --vertical-label "Celsius"  \
+	'DEF:boiler_oben=/www/sd/visu/heating.rrd:boiler_oben:AVERAGE' \
+	'DEF:boiler_mitte=/www/sd/visu/heating.rrd:boiler_mitte:AVERAGE' \
+	'DEF:boiler_unten=/www/sd/visu/heating.rrd:boiler_unten:AVERAGE' \
+	'LINE2:boiler_oben#ff0000:Boiler Oben' 'LINE2:boiler_mitte#FF8C00:Boiler Mitte' 'LINE2:boiler_unten#0400ff:Boiler Unten\n'
