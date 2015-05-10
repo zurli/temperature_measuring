@@ -51,8 +51,8 @@ Generate the rrd Database
     RRA:AVERAGE:0.5:72:1460
 
 creates a database that
-is updated every 5 minutes
-has heartbeat of 900, means may miss 3 measures bevore coming UNKNOWN
+is updated every 5 minutes<br>
+has heartbeat of 900, means may miss 3 measures bevore coming UNKNOWN<br>
 has data sources that that can save values from 0 to unlimited
 saves 1 day in 5-minute resolution (288 * (300*1/60) / 60/24)
 saves 1 week in in 15-minute resolution (672 * (300*3/60) / 60/24)
