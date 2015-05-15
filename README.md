@@ -36,8 +36,9 @@ and finally put them into the bridge
 
 	Bridge.put("boiler_oben", String(boiler_o));  // put values to bridge
 
-Remark: with Arduino 1.6.3 it was not possible to put more than one value to the bridge.
-Therefore juse at least Arduino Version 1.6.4 and above
+Remarks: with Arduino 1.6.3 it was not possible to put more than one value to the bridge.
+Therefore use at least Arduino Version 1.6.4 and above.
+If you need temperature, with commas use float. Whitout commas use int.
 
 
 Generate the rrd Database
@@ -96,4 +97,5 @@ you might need to control, if cronjob is running. You can enable crontab with
 Testing
 -------
 
-To read the collected data go to http://ip-your-yun/
+To read the collected data go to http://ip-your-yun/keystore_manager_example/
+The generated rrd image can be accesed on http://ip-your-yun/temperature_measuring/rrd/Speicher_Tag.gif
