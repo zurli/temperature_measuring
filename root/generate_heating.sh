@@ -1,7 +1,6 @@
 #!/bin/sh
 
 rrddir=/www/sd/temperature_measuring/rrd/
-HEATING=/www/sd/temperature_measuring/index.html
 
 boiler_unten=$(curl http://localhost/data/get/boiler_unten 2>/dev/null | awk -F"\"" '{ print $4 }')
 boiler_mitte=$(curl http://localhost/data/get/boiler_mitte 2>/dev/null | awk -F"\"" '{ print $4 }')
