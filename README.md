@@ -9,7 +9,6 @@ Please take care to connect your Arduino to USB and check your Internet connecti
 
 Install additional software to Yun
 ----------------------------------
-Connect to your Yun via SSH Terminal and install rrd
 
 an sftp Server to easy connect your yun with an sftp client.
 	
@@ -37,11 +36,14 @@ and finally put them into the bridge
 
 	Bridge.put("boiler_oben", String(boiler_o));  // put values to bridge
 
+Remark: with Arduino 1.6.3 it was not possible to put more than one value to the bridge.
+Therefore juse at least Arduino Version 1.6.4 and above
+
 
 Generate the rrd Database
 -------------------------
 
-	rdtool create /www/sd/visu/heating.rrd --step 300 \
+	rdtool create /www/sd/temperature_measuring/heating.rrd --step 300 \
 	DS:boiler_oben:GAUGE:900:0:U \
 	DS:boiler_mitte:GAUGE:900:0:U \
 	DS:boiler_unten:GAUGE:900:0:U \
@@ -68,13 +70,30 @@ With a simple curl command the results of each sensor can be read
 
 after we read all these values in variables we can update the rrd database
 
-	rrdtool update /www/sd/visu/heating.rrd N:$boiler_oben:$boiler_mitte:$boiler_unten
+	rrdtool update /www/sd/temperature_measuring/heating.rrd N:$boiler_oben:$boiler_mitte:$boiler_unten
 
 and finally we will generate the graph wit rrdtool graph
 
 	rrdtool graph $rrddir/Speicher_Tag.gif -s "-1d" -w 600 -h 300 --x-grid "MINUTE:30:HOUR:1:MINUTE:120:0:%H" \
 	--title="Speicher 24h" --vertical-label "Celsius"  \
-	'DEF:boiler_oben=/www/sd/visu/heating.rrd:boiler_oben:AVERAGE' \
-	'DEF:boiler_mitte=/www/sd/visu/heating.rrd:boiler_mitte:AVERAGE' \
-	'DEF:boiler_unten=/www/sd/visu/heating.rrd:boiler_unten:AVERAGE' \
+	'DEF:boiler_oben=/www/sd/temperature_measuring/heating.rrd:boiler_oben:AVERAGE' \
+	'DEF:boiler_mitte=/www/sd/temperature_measuring/heating.rrd:boiler_mitte:AVERAGE' \
+	'DEF:boiler_unten=/www/sd/temperature_measuring/heating.rrd:boiler_unten:AVERAGE' \
 	'LINE2:boiler_oben#ff0000:Boiler Oben' 'LINE2:boiler_mitte#FF8C00:Boiler Mitte' 'LINE2:boiler_unten#0400ff:Boiler Unten\n'
+
+to automate the enties we will generate a crontab entry as follow:
+
+	
+	*/5 * * * * /bin/sh /root/generate_heating.sh 2>> /root/error.log
+
+if there are any errors while running the update script, the errors will be written into /root/error.log
+you might need to control, if cronjob is running. You can enable crontab with
+
+	root@Arduino:# /etc/init.d/cron start
+	root@Arduino:# /etc/init.d/cron enable
+
+
+Testing
+-------
+
+To read the collected data go to http://ip-your-yun/

@@ -1,0 +1,20 @@
+# generate rrd
+rrdtool create /www/sd/temperature_measuring/heating.rrd --step 300 \
+	DS:boiler_oben:GAUGE:900:0:U \
+	DS:boiler_mitte:GAUGE:900:0:U \
+	DS:boiler_unten:GAUGE:900:0:U \
+	RRA:AVERAGE:0.5:1:288 \
+    RRA:AVERAGE:0.5:3:672 \
+    RRA:AVERAGE:0.5:12:744 \
+    RRA:AVERAGE:0.5:72:1460
+
+    creates a database that
+    is updated every 5 minutes
+    has heartbeat of 900, means may miss 3 measures bevore coming UNKNOWN
+    has data sources that that can save values from 0 to unlimited
+    saves 1 day in 5-minute resolution (288 * (300*1/60) / 60/24)
+    saves 1 week in in 15-minute resolution (672 * (300*3/60) / 60/24)
+    saves 1 month in 1-hour resolution (744 * (300*12/60) / 60/24)
+    saves 1 year in 6-hour resolution (1460 * (300*72/60) / 60/24)
+
+rrdtool updatev /www/sd/temperature_measuring/heating.rrd N:$a_temp:$sonne_ost:$sonne_sued:$sonne_west:$tageslicht:$daemmerung:$regen:$wind
